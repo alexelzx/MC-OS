@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minecraft Government OS</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="desktop">
+        <div class="gov-background" aria-hidden="true">
+            <div class="gov-emblem-strip"><span>💎</span><span>🗺️</span><span>🛡️</span><span>🟩</span></div>
+            <div class="gov-seal-ring">
+                <div class="gov-seal-core">MC-OS</div>
+            </div>
+            <div class="gov-seal-text-top">MINECRAFT NATIONAL GOVERNMENT</div>
+            <div class="gov-seal-text-bottom">LAW • TREASURY • INFRASTRUCTURE • SECURITY</div>
+            <div class="gov-banner">EMERALD AUTHORITY • CARTOGRAPHY • DEFENSE • NATIONAL SECURITY</div>
+        </div>
+        <div class="main-content">
+            <div class="window active" id="welcomeWindow">
+                <div class="title-bar">
+                    <span class="title-text">Minecraft Government OS v4.0</span>
+                    <div class="window-buttons">
+                        <div class="btn-window" data-window-action="min">_</div>
+                        <div class="btn-window" data-window-action="max">□</div>
+                        <div class="btn-window" data-window-action="close">✕</div>
+                    </div>
+                </div>
+                <div class="window-content">
+                    <div class="landing-panel">
+                        <h1 class="hero-title">National Administration Desktop</h1>
+                        <p class="hero-subtitle">Clean startup | MCID-linked services | Printable government docs</p>
+                        <div class="app-grid app-grid-wide">
+                            <div class="app-shortcut" onclick="openApp('borderApp')"><div class="app-icon">🛂</div><div class="app-name">Customs</div></div>
+                            <div class="app-shortcut" onclick="openApp('citizenApp')"><div class="app-icon">👤</div><div class="app-name">Citizens</div></div>
+                            <div class="app-shortcut" onclick="openApp('bankingApp')"><div class="app-icon">💰</div><div class="app-name">Banking</div></div>
+                            <div class="app-shortcut" onclick="openApp('waterApp')"><div class="app-icon">💧</div><div class="app-name">Water</div></div>
+                            <div class="app-shortcut" onclick="openApp('taxApp')"><div class="app-icon">🏛️</div><div class="app-name">Tax & Bills</div></div>
+                            <div class="app-shortcut" onclick="openApp('policeApp')"><div class="app-icon">🛡️</div><div class="app-name">Police & NSD</div></div>
+                            <div class="app-shortcut" onclick="openApp('browseApp')"><div class="app-icon">🔎</div><div class="app-name">Global Browser</div></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="subheading mb-10">Government Data Backup</h3>
+                            <div class="inline-row">
+                                <button onclick="exportGovernmentData()">Export Backup JSON</button>
+                                <button onclick="triggerImportBackup()">Import Backup JSON</button>
+                                <input id="backupFileInput" type="file" accept="application/json" class="hidden">
+                            </div>
+                            <div id="backupResult" class="mt-15"></div>
+                            <div id="expiryNoticeBoard" class="result-panel mt-15">No permit/visa expiry alerts.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="status-bar"><span>System Ready</span></div>
+            </div>
+
+            <div class="window" id="borderApp">
+                <div class="title-bar">
+                    <span class="title-text">Customs & Border Control</span>
+                    <div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div>
+                </div>
+                <div class="menu-bar">
+                    <div class="menu-item" onclick="showBorderSection('dashboard')">Dashboard</div>
+                    <div class="menu-item" onclick="showBorderSection('register')">Create</div>
+                    <div class="menu-item" onclick="showBorderSection('search')">Quick Search</div>
+                    <div class="menu-item" onclick="showBorderSection('logs')">Logs</div>
+                    <div class="menu-item" onclick="showBorderSection('admin')">Update/Delete</div>
+                </div>
+                <div class="window-content">
+                    <div id="borderDashboard" class="border-section">
+                        <h2 class="section-heading">Customs Overview</h2>
+                        <div class="stats-grid">
+                            <div class="card"><h3 class="subheading">Total Entries</h3><p id="customsTotalEntries">0</p></div>
+                            <div class="card"><h3 class="subheading">Active Visitors</h3><p id="customsActiveVisitors">0</p></div>
+                            <div class="card"><h3 class="subheading">Flagged Cases</h3><p id="customsFlaggedCases">0</p></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="subheading mb-10">Quick Search + Passport PDF</h3>
+                            <div class="inline-row"><input id="borderQuickSearch" class="flex-1" type="text" placeholder="MCID / CPID / Name"><button onclick="quickSearchCustoms()">Search</button><button onclick="printPassportFromInput('borderQuickSearch')">Print Passport PDF</button></div>
+                            <div id="borderQuickResult" class="mt-15"></div>
+                        </div>
+                    </div>
+
+                    <div id="borderRegister" class="border-section hidden">
+                        <h2 class="section-heading">Entry Registration</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID (optional)</label><input id="entryMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>Username</label><input id="entryUsername" type="text"></div>
+                            <div class="form-group"><label>First Name</label><input id="entryFirstName" type="text"></div>
+                            <div class="form-group"><label>Middle Name</label><input id="entryMiddleName" type="text"></div>
+                            <div class="form-group"><label>Surname</label><input id="entryLastName" type="text"></div>
+                            <div class="form-group"><label>Date of Birth</label><input id="entryDob" type="date"></div>
+                            <div class="form-group"><label>Age (auto from DOB)</label><input id="entryAge" type="number" readonly></div>
+                            <div class="form-group"><label>Gender</label><input id="entryGender" type="text"></div>
+                            <div class="form-group"><label>Nationality</label><input id="entryNationality" type="text"></div>
+                            <div class="form-group"><label>Passport #</label><input id="entryPassportNumber" type="text"></div>
+                            <div class="form-group"><label>Passport Expiry</label><input id="entryPassportExpiry" type="date"></div>
+                            <div class="form-group"><label>Travel Method</label><select id="entryTravelMethod"><option>On Foot</option><option>Horse</option><option>Boat</option><option>Minecart</option><option>Nether Portal</option></select></div>
+                            <div class="form-group"><label>Border Post</label><input id="entryBorderPost" type="text"></div>
+                            <div class="form-group"><label>Purpose</label><select id="entryPurpose"><option>Tourism</option><option>Work</option><option>Residence</option><option>Trade</option><option>Diplomatic</option></select></div>
+                            <div class="form-group"><label>Visa Type</label><select id="entryVisaType"><option>Tourist</option><option>Work</option><option>Resident</option><option>Diplomatic</option></select></div>
+                            <div class="form-group"><label>Stay Duration (days)</label><input id="entryVisaDuration" type="number"></div>
+                            <div class="form-group"><label>Host Name</label><input id="entryHostName" type="text"></div>
+                            <div class="form-group"><label>Host Contact</label><input id="entryHostContact" type="text"></div>
+                            <div class="form-group"><label>Emergency Name</label><input id="entryEmergencyName" type="text"></div>
+                            <div class="form-group"><label>Emergency Relation</label><input id="entryEmergencyRelation" type="text"></div>
+                            <div class="form-group"><label>Emergency Contact</label><input id="entryEmergencyContact" type="text"></div>
+                        </div>
+                        <div class="form-group"><label>Arrival Coordinates</label><div class="inline-row"><input id="entryX" class="flex-1" type="number" placeholder="X"><input id="entryY" class="flex-1" type="number" placeholder="Y"><input id="entryZ" class="flex-1" type="number" placeholder="Z"></div></div>
+                        <div class="form-group"><label>Criminal Declaration</label><textarea id="entryCriminalDecl" rows="2"></textarea></div>
+                        <div class="form-group"><label>Declared Assets</label><textarea id="entryAssets" rows="2"></textarea></div>
+                        <div class="form-group"><label>Items Manifest</label><textarea id="entryItems" rows="2"></textarea></div>
+                        <div class="form-group"><label>Health Declaration</label><textarea id="entryHealth" rows="2"></textarea></div>
+                        <div class="form-group"><label>Officer Notes</label><textarea id="entryNotes" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="registerEntry()">Create Entry + Link Profile</button><button onclick="clearFormFields('borderRegister')">Clear Fields</button></div>
+                        <div id="cpidResult" class="result-panel hidden"><strong>CPID:</strong> <span id="cpidValue"></span></div>
+                    </div>
+
+                    <div id="borderSearch" class="border-section hidden">
+                        <h2 class="section-heading">Quick Search</h2>
+                        <div class="inline-row"><input id="searchBorder" class="flex-1" type="text" placeholder="MCID / CPID / name"><button onclick="searchBorder()">Search</button></div>
+                        <div id="borderSearchResult" class="mt-15"></div>
+                    </div>
+
+                    <div id="borderLogs" class="border-section hidden">
+                        <h2 class="section-heading">Entry Logs</h2>
+                        <table><thead><tr><th>CPID</th><th>MCID</th><th>Name</th><th>Date</th><th>Visa</th><th>Status</th><th>Profile</th></tr></thead><tbody id="entryLogsBody"></tbody></table>
+                    </div>
+
+                    <div id="borderAdmin" class="border-section hidden">
+                        <h2 class="section-heading">Update/Delete</h2>
+                        <div class="card"><h3 class="subheading mb-10">Delete Linked Data by MCID</h3><div class="inline-row"><input id="borderDeleteMCID" class="flex-1" type="text" placeholder="MCID-0001"><button onclick="deleteCustomsDataByUser()">Delete</button></div><div id="borderAdminResult" class="mt-15"></div></div>
+                    </div>
+                </div>
+                <div class="status-bar"><span>Customs Ready</span></div>
+            </div>
+
+            <div class="window" id="citizenApp">
+                <div class="title-bar">
+                    <span class="title-text">Citizen Management</span>
+                    <div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div>
+                </div>
+                <div class="menu-bar">
+                    <div class="menu-item" onclick="showCitizenSection('dashboard')">Dashboard</div>
+                    <div class="menu-item" onclick="showCitizenSection('create')">Create</div>
+                    <div class="menu-item" onclick="showCitizenSection('search')">Quick Search</div>
+                    <div class="menu-item" onclick="showCitizenSection('list')">Directory</div>
+                    <div class="menu-item" onclick="showCitizenSection('manage')">Update/Delete</div>
+                    <div class="menu-item" onclick="showCitizenSection('permitIssue')">Issue Permit</div>
+                    <div class="menu-item" onclick="showCitizenSection('permitBrowser')">Permit/Visa Browser</div>
+                    <div class="menu-item" onclick="showCitizenSection('admin')">Global Delete</div>
+                </div>
+                <div class="window-content">
+                    <div id="citizenDashboard" class="citizen-section">
+                        <h2 class="section-heading">Citizen Overview</h2>
+                        <div class="stats-grid">
+                            <div class="card"><h3 class="subheading">Total Citizens</h3><p id="citizenTotalCount">0</p></div>
+                            <div class="card"><h3 class="subheading">Linked Accounts</h3><p id="citizenLinkedAccounts">0</p></div>
+                            <div class="card"><h3 class="subheading">Issued Permits</h3><p id="citizenPermitCount">0</p></div>
+                        </div>
+                        <div class="card">
+                            <h3 class="subheading mb-10">Quick Search + ID PDF</h3>
+                            <div class="inline-row"><input id="citizenQuickSearch" class="flex-1" type="text" placeholder="MCID / name / username"><button onclick="quickSearchCitizen()">Search</button><button onclick="printCitizenIdFromInput('citizenQuickSearch')">Print Citizen ID PDF</button></div>
+                            <div id="citizenQuickResult" class="mt-15"></div>
+                        </div>
+                    </div>
+
+                    <div id="citizenCreate" class="citizen-section hidden">
+                        <h2 class="section-heading">Create/Update Citizen Profile</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID (optional existing)</label><input id="citizenMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>First Name</label><input id="citizenFirstName" type="text"></div>
+                            <div class="form-group"><label>Middle Name</label><input id="citizenMiddleName" type="text"></div>
+                            <div class="form-group"><label>Surname</label><input id="citizenLastName" type="text"></div>
+                            <div class="form-group"><label>Username</label><input id="citizenUsername" type="text"></div>
+                            <div class="form-group"><label>Date of Birth</label><input id="citizenDob" type="date"></div>
+                            <div class="form-group"><label>Age (auto from DOB)</label><input id="citizenAge" type="number" readonly></div>
+                            <div class="form-group"><label>Gender</label><input id="citizenGender" type="text"></div>
+                            <div class="form-group"><label>Marital Status</label><select id="citizenMaritalStatus"><option>Single</option><option>Married</option><option>Divorced</option><option>Widowed</option></select></div>
+                            <div class="form-group"><label>Nationality</label><input id="citizenNationality" type="text"></div>
+                            <div class="form-group"><label>Occupation</label><input id="citizenOccupation" type="text"></div>
+                            <div class="form-group"><label>Employer</label><input id="citizenEmployer" type="text"></div>
+                            <div class="form-group"><label>Education</label><input id="citizenEducationLevel" type="text"></div>
+                            <div class="form-group"><label>Tax ID</label><input id="citizenTaxId" type="text"></div>
+                            <div class="form-group"><label>Blood Type</label><input id="citizenBloodType" type="text"></div>
+                            <div class="form-group"><label>Allergies</label><input id="citizenAllergies" type="text"></div>
+                            <div class="form-group"><label>Emergency Name</label><input id="citizenEmergencyName" type="text"></div>
+                            <div class="form-group"><label>Emergency Relation</label><input id="citizenEmergencyRelation" type="text"></div>
+                            <div class="form-group"><label>Emergency Contact</label><input id="citizenEmergencyContact" type="text"></div>
+                        </div>
+                        <div class="form-group"><label>Residence Coordinates</label><div class="inline-row"><input id="citizenX" class="flex-1" type="number" placeholder="X"><input id="citizenY" class="flex-1" type="number" placeholder="Y"><input id="citizenZ" class="flex-1" type="number" placeholder="Z"></div></div>
+                        <div class="form-group"><label>Mailing Address</label><textarea id="citizenMailingAddress" rows="2"></textarea></div>
+                        <div class="form-group"><label>Permits/Visa</label><textarea id="citizenPermits" rows="2"></textarea></div>
+                        <div class="form-group"><label>Skills/Certifications</label><textarea id="citizenSkills" rows="2"></textarea></div>
+                        <div class="form-group"><label>Criminal Record Notes</label><textarea id="citizenCriminalRecord" rows="2"></textarea></div>
+                        <div class="form-group"><label>Administrative Notes</label><textarea id="citizenNotes" rows="2"></textarea></div>
+                        <div class="form-group"><label>Upload Mugshot</label><input id="citizenMugshot" type="file" accept="image/*"></div>
+                        <div class="inline-row"><button onclick="createCitizen()">Save Citizen Profile</button><button onclick="clearFormFields('citizenCreate')">Clear Fields</button></div>
+                        <div id="mcidResult" class="result-panel hidden"><strong>MCID:</strong> <span id="mcidValue"></span></div>
+                    </div>
+
+                    <div id="citizenSearch" class="citizen-section hidden"><h2 class="section-heading">Quick Search</h2><div class="inline-row"><input id="searchCitizen" class="flex-1" type="text" placeholder="MCID / name"><button onclick="searchCitizen()">Search</button></div><div id="citizenSearchResult" class="mt-15"></div></div>
+
+                    <div id="citizenList" class="citizen-section hidden"><h2 class="section-heading">Citizen Directory</h2><table><thead><tr><th>MCID</th><th>Name</th><th>DOB</th><th>Occupation</th><th>Accounts</th><th>Profile</th></tr></thead><tbody id="citizenDirectoryBody"></tbody></table></div>
+
+                    <div id="citizenManage" class="citizen-section hidden"><h2 class="section-heading">Update/Delete Citizen</h2><div class="form-group"><label>MCID</label><input id="manageMCID" type="text" placeholder="MCID-0001"></div><div class="inline-row"><button onclick="loadCitizenForManagement()">Load Profile</button><button onclick="printCitizenIdByMCID()">Print Citizen ID PDF</button><button onclick="printCitizenProfileByMCIDInput('manageMCID')">Profile PDF</button></div><div class="form-group mt-15"><label>Update Permits</label><input id="managePermits" type="text"></div><div class="inline-row"><button onclick="updatePermits()">Save Update</button><button onclick="deleteCitizen()">Delete Citizen + Linked Data</button><button onclick="clearFormFields('citizenManage')">Clear Fields</button></div><div id="manageProfile" class="result-panel mt-15 hidden"><h3 class="subheading">Profile</h3><div id="profileInfo"></div></div></div>
+
+                    <div id="citizenPermitIssue" class="citizen-section hidden">
+                        <h2 class="section-heading">Issue Permit</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID</label><input id="permitMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>Permit Type</label><select id="permitType" onchange="onPermitTypeChange()"><option>Work Permit</option><option>Hunt Permit</option><option>Build Permit</option><option>Land Use Permit</option><option>Trade Permit</option><option>Travel Permit</option></select></div>
+                            <div class="form-group"><label>Issued By Department</label><input id="permitDepartment" type="text" placeholder="Urban Planning"></div>
+                            <div class="form-group"><label>Issued By Officer</label><input id="permitOfficer" type="text" placeholder="Officer Name"></div>
+                            <div class="form-group"><label>Valid From</label><input id="permitValidFrom" type="date"></div>
+                            <div class="form-group"><label>Valid Until</label><input id="permitValidUntil" type="date"></div>
+                            <div class="form-group"><label>Estimated Cost (Gold Nuggets)</label><input id="permitCost" type="number" min="0"></div>
+                        </div>
+
+                        <div id="permitWorkPanel" class="permit-type-panel">
+                            <h3 class="subheading mb-10">Work Permit Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Employer</label><input id="permitWorkEmployer" type="text"></div>
+                                <div class="form-group"><label>Role / Position</label><input id="permitWorkRole" type="text"></div>
+                                <div class="form-group"><label>Work Site / Region</label><input id="permitWorkSite" type="text"></div>
+                                <div class="form-group"><label>Supervisor Name</label><input id="permitWorkSupervisor" type="text"></div>
+                            </div>
+                            <div class="form-group"><label>Allowed Work Hours</label><input id="permitWorkHours" type="text" placeholder="08:00-18:00"></div>
+                            <div class="form-group"><label>Safety/Compliance Conditions</label><textarea id="permitWorkSafety" rows="2"></textarea></div>
+                        </div>
+
+                        <div id="permitHuntPanel" class="permit-type-panel hidden">
+                            <h3 class="subheading mb-10">Hunt Permit Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Hunting Sector / Region</label><input id="permitHuntSector" type="text" placeholder="Sector North-3"></div>
+                                <div class="form-group"><label>Species Allowed</label><input id="permitHuntSpecies" type="text" placeholder="Boar, Deer"></div>
+                                <div class="form-group"><label>Weapon / Method Allowed</label><input id="permitHuntMethod" type="text" placeholder="Bow only"></div>
+                                <div class="form-group"><label>Quota (max kills)</label><input id="permitHuntQuota" type="number" min="1"></div>
+                            </div>
+                            <div class="form-group"><label>Time Window</label><input id="permitHuntWindow" type="text" placeholder="Dawn to dusk"></div>
+                            <div class="form-group"><label>Special Restrictions</label><textarea id="permitHuntRestrictions" rows="2"></textarea></div>
+                        </div>
+
+                        <div id="permitBuildPanel" class="permit-type-panel hidden">
+                            <h3 class="subheading mb-10">Build Permit Details</h3>
+                            <div class="form-group"><label>Coordinates</label><div class="inline-row"><input id="permitX" class="flex-1" type="number" placeholder="X"><input id="permitY" class="flex-1" type="number" placeholder="Y"><input id="permitZ" class="flex-1" type="number" placeholder="Z"></div></div>
+                            <div class="form-group"><label>Current Structure Measures (W x L x H)</label><div class="inline-row"><input id="permitWidth" class="flex-1" type="number" min="0" placeholder="Width"><input id="permitLength" class="flex-1" type="number" min="0" placeholder="Length"><input id="permitHeight" class="flex-1" type="number" min="0" placeholder="Height"></div></div>
+                            <div class="form-group"><label>Planned Changes</label><textarea id="permitChanges" rows="2" placeholder="Expand west wall by 5 blocks; add second floor"></textarea></div>
+                            <div class="form-group"><label>Materials / Safety Notes</label><textarea id="permitMaterials" rows="2"></textarea></div>
+                        </div>
+
+                        <div id="permitLandUsePanel" class="permit-type-panel hidden">
+                            <h3 class="subheading mb-10">Land Use Permit Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Parcel / Plot ID</label><input id="permitLandParcel" type="text"></div>
+                                <div class="form-group"><label>Land Use Purpose</label><input id="permitLandPurpose" type="text" placeholder="Farming, storage, workshop"></div>
+                                <div class="form-group"><label>Area Size (blocks²)</label><input id="permitLandArea" type="number" min="1"></div>
+                                <div class="form-group"><label>Region</label><input id="permitLandRegion" type="text"></div>
+                            </div>
+                            <div class="form-group"><label>Use Restrictions</label><textarea id="permitLandRestrictions" rows="2"></textarea></div>
+                        </div>
+
+                        <div id="permitTradePanel" class="permit-type-panel hidden">
+                            <h3 class="subheading mb-10">Trade Permit Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Goods Categories</label><input id="permitTradeGoods" type="text" placeholder="Food, ores, tools"></div>
+                                <div class="form-group"><label>Trade Route / Region</label><input id="permitTradeRoute" type="text"></div>
+                                <div class="form-group"><label>Max Daily Volume</label><input id="permitTradeVolume" type="number" min="1"></div>
+                                <div class="form-group"><label>Market License #</label><input id="permitTradeLicense" type="text"></div>
+                            </div>
+                            <div class="form-group"><label>Approved Trade Partners</label><textarea id="permitTradePartners" rows="2"></textarea></div>
+                        </div>
+
+                        <div id="permitTravelPanel" class="permit-type-panel hidden">
+                            <h3 class="subheading mb-10">Travel Permit Details</h3>
+                            <div class="form-grid">
+                                <div class="form-group"><label>Destination</label><input id="permitTravelDestination" type="text"></div>
+                                <div class="form-group"><label>Travel Purpose</label><input id="permitTravelPurpose" type="text"></div>
+                                <div class="form-group"><label>Transport Mode</label><input id="permitTravelMode" type="text" placeholder="Boat, horse, portal"></div>
+                                <div class="form-group"><label>Return Date</label><input id="permitTravelReturn" type="date"></div>
+                            </div>
+                            <div class="form-group"><label>Companions / Escort</label><textarea id="permitTravelCompanions" rows="2"></textarea></div>
+                        </div>
+
+                        <div class="form-group"><label>Approval Notes</label><textarea id="permitNotes" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="issuePermit()">Issue Permit</button><button onclick="clearFormFields('citizenPermitIssue')">Clear Fields</button></div>
+                        <div id="permitIssueResult" class="mt-15"></div>
+                        <table><thead><tr><th>Permit ID</th><th>MCID</th><th>Type</th><th>Valid Until</th><th>Officer</th><th>File</th></tr></thead><tbody id="permitLogBody"></tbody></table>
+                    </div>
+
+                    <div id="citizenPermitBrowser" class="citizen-section hidden">
+                        <h2 class="section-heading">Permit and Visa Browser</h2>
+                        <div id="permitVisaNotice" class="result-panel">No permit/visa expiry alerts.</div>
+                        <table>
+                            <thead><tr><th>Document</th><th>ID</th><th>MCID</th><th>Type</th><th>Issued</th><th>Expires</th><th>Status</th><th>Profile</th></tr></thead>
+                            <tbody id="permitVisaBody"></tbody>
+                        </table>
+                    </div>
+
+                    <div id="citizenAdmin" class="citizen-section hidden"><h2 class="section-heading">Global Deletion Controls</h2><div class="card"><h3 class="subheading mb-10">Delete by MCID</h3><div class="inline-row"><input id="citizenDeleteMCID" class="flex-1" type="text" placeholder="MCID-0001"><button onclick="deleteCitizenDataByUser()">Delete</button></div><div id="citizenAdminResult" class="mt-15"></div></div><div class="card"><h3 class="subheading mb-10">Delete ALL Data</h3><div class="inline-row"><input id="globalDeleteConfirm" class="flex-1" type="text" placeholder="Type DELETE ALL"><button onclick="deleteAllGovernmentData()">Purge Everything</button></div><div id="globalAdminResult" class="mt-15"></div></div></div>
+                </div>
+                <div class="status-bar"><span>Citizen Registry Ready</span></div>
+            </div>
+
+            <div class="window" id="bankingApp">
+                <div class="title-bar">
+                    <span class="title-text">National Banking & Treasury</span>
+                    <div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div>
+                </div>
+                <div class="menu-bar">
+                    <div class="menu-item" onclick="showBankingSection('dashboard')">Dashboard</div>
+                    <div class="menu-item" onclick="showBankingSection('account')">Create</div>
+                    <div class="menu-item" onclick="showBankingSection('transactions')">Logs/Update</div>
+                    <div class="menu-item" onclick="showBankingSection('credits')">Credits</div>
+                </div>
+                <div class="window-content">
+                    <div id="bankDashboard" class="banking-section">
+                        <h2 class="section-heading">Banking Overview</h2>
+                        <div class="stats-grid"><div class="card"><h3 class="subheading">Current Holdings</h3><p id="bankHoldingsTotal">0</p></div><div class="card"><h3 class="subheading">Mine/Facility Production</h3><p id="bankProductionTotal">0</p></div><div class="card"><h3 class="subheading">Active Credits</h3><p id="bankActiveCreditCount">0</p></div></div>
+                        <div class="card"><h3 class="subheading mb-10">Quick Profile + Bank Docs</h3><div class="inline-row"><input id="bankQuickSearch" class="flex-1" type="text" placeholder="MCID / Account ID"><button onclick="quickSearchBanking()">Search</button><button onclick="printDebitCardFromInput('bankQuickSearch')">Print Debit Card PDF</button><button onclick="printBankStatementFromInput('bankQuickSearch')">Print Bank Statement PDF</button></div><div id="bankQuickResult" class="mt-15"></div></div>
+                        <div class="card"><h3 class="subheading mb-10">Register Mine/Facility Production</h3><div class="form-grid"><div class="form-group"><label>Facility</label><input id="bankProdFacility" type="text" placeholder="Mine Shaft Alpha"></div><div class="form-group"><label>Resource</label><input id="bankProdResource" type="text" placeholder="Gold Nugget"></div><div class="form-group"><label>Quantity</label><input id="bankProdQuantity" type="number" min="0"></div><div class="form-group"><label>Updated Date</label><input id="bankProdDate" type="date"></div></div><button onclick="addBankProductionRecord()">Add Production Record</button><div id="bankProdResult" class="mt-15"></div></div>
+                        <div class="card"><h3 class="subheading mb-10">Bank Entry Logs</h3><table><thead><tr><th>Date</th><th>Time</th><th>User</th><th>Action</th></tr></thead><tbody id="bankEntryLogBody"></tbody></table></div>
+                        <div class="card"><h3 class="subheading mb-10">Current Production by Facility</h3><table><thead><tr><th>Facility</th><th>Resource</th><th>Quantity</th><th>Updated</th></tr></thead><tbody id="bankProductionBody"></tbody></table></div>
+                    </div>
+
+                    <div id="bankAccount" class="banking-section hidden">
+                        <h2 class="section-heading">Create Linked Bank Account</h2>
+                        <div class="card"><h3 class="subheading mb-10">MCID Verification</h3><div class="inline-row"><input id="bankVerifyMCID" class="flex-1" type="text" placeholder="MCID-0001"><button onclick="verifyMCIDForModule('bank')">Verify MCID</button></div><div id="bankVerifyResult" class="mt-15"></div></div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID</label><input id="bankMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>Account Type</label><select id="bankAccountType"><option>Savings</option><option>Business</option><option>Trade</option><option>Government Payroll</option></select></div>
+                            <div class="form-group"><label>Currency</label><select id="bankCurrency"><option>Gold Nuggets</option><option>Emeralds</option><option>Gold Ingots</option></select></div>
+                            <div class="form-group"><label>Initial Deposit</label><input id="bankInitialDeposit" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Income Source</label><input id="bankIncomeSource" type="text"></div>
+                            <div class="form-group"><label>Monthly Income</label><input id="bankMonthlyIncome" type="number" min="0"></div>
+                            <div class="form-group"><label>KYC ID Type</label><select id="bankKycIdType"><option>MCID Card</option><option>Passport</option><option>Work Permit</option></select></div>
+                            <div class="form-group"><label>KYC ID Number</label><input id="bankKycIdNumber" type="text"></div>
+                            <div class="form-group"><label>Address Proof</label><input id="bankAddressProof" type="text"></div>
+                            <div class="form-group"><label>Risk Profile</label><select id="bankRiskProfile"><option>Low</option><option>Medium</option><option>High</option></select></div>
+                            <div class="form-group"><label>Recovery Contact</label><input id="bankRecoveryContact" type="text"></div>
+                            <div class="form-group"><label>Daily Limit</label><input id="bankDailyLimit" type="number" min="0" value="1000"></div>
+                            <div class="form-group"><label>Security Question</label><input id="bankSecurityQuestion" type="text"></div>
+                            <div class="form-group"><label>Security Answer</label><input id="bankSecurityAnswer" type="text"></div>
+                            <div class="form-group"><label>Beneficiary Name</label><input id="bankBeneficiaryName" type="text"></div>
+                            <div class="form-group"><label>Beneficiary Relation</label><input id="bankBeneficiaryRelation" type="text"></div>
+                            <div class="form-group"><label>Beneficiary MCID</label><input id="bankBeneficiaryMCID" type="text"></div>
+                            <div class="form-group"><label>Enable Overdraft</label><select id="bankOverdraft"><option>No</option><option>Yes</option></select></div>
+                        </div>
+                        <div class="inline-row"><button onclick="createAccount()">Create Account</button><button onclick="clearFormFields('bankAccount')">Clear Fields</button></div>
+                        <div id="bankCreateResultWrap" class="result-panel mt-15 hidden"><span id="bankCreateResult"></span></div>
+                    </div>
+
+                    <div id="bankTransactions" class="banking-section hidden"><h2 class="section-heading">Player Profile + Deposit/Withdraw Logs</h2><div class="form-grid"><div class="form-group"><label>Account ID</label><input id="transactionAccount" type="text" placeholder="ACC-00001"></div><div class="form-group"><label>Type</label><select id="transactionType"><option>Deposit</option><option>Withdraw</option></select></div><div class="form-group"><label>Amount</label><input id="transactionAmount" type="number" min="0"></div></div><div class="inline-row"><button onclick="processTransaction()">Apply Transaction</button><button onclick="clearFormFields('bankTransactions')">Clear Fields</button></div><table><thead><tr><th>TX</th><th>Date</th><th>MCID</th><th>Account</th><th>Type</th><th>Amount</th><th>Balance</th></tr></thead><tbody id="transactionLogBody"></tbody></table></div>
+
+                    <div id="bankCredits" class="banking-section hidden"><h2 class="section-heading">Active Credits</h2><div class="form-grid"><div class="form-group"><label>Account ID</label><input id="creditAccount" type="text" placeholder="ACC-00001"></div><div class="form-group"><label>Amount</label><input id="creditAmount" type="number" min="0"></div><div class="form-group"><label>Rate (%)</label><input id="creditRate" type="number" min="0" max="100"></div><div class="form-group"><label>Term (days)</label><input id="creditTerm" type="number" min="1"></div></div><div class="inline-row"><button onclick="issueCredit()">Issue Credit</button><button onclick="clearFormFields('bankCredits')">Clear Fields</button></div><table><thead><tr><th>Credit</th><th>MCID</th><th>Account</th><th>Principal</th><th>Rate</th><th>Term</th><th>Status</th></tr></thead><tbody id="creditLogBody"></tbody></table></div>
+                </div>
+                <div class="status-bar"><span>Treasury Ready</span></div>
+            </div>
+
+            <div class="window" id="waterApp">
+                <div class="title-bar"><span class="title-text">Water Supply & Distribution</span><div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div></div>
+                <div class="menu-bar"><div class="menu-item" onclick="showWaterSection('dashboard')">Dashboard</div><div class="menu-item" onclick="showWaterSection('register')">Register House</div><div class="menu-item" onclick="showWaterSection('usage')">Register Usage</div><div class="menu-item" onclick="showWaterSection('logs')">Logs</div></div>
+                <div class="window-content">
+                    <div id="waterDashboard" class="water-section"><h2 class="section-heading">Water Utility Overview</h2><div class="stats-grid"><div class="card"><h3 class="subheading">Connected Houses</h3><p id="waterConnectedCount">0</p></div><div class="card"><h3 class="subheading">Blocks Used</h3><p id="waterBlocksTotal">0</p></div><div class="card"><h3 class="subheading">Total Charged (Gold Nuggets)</h3><p id="waterChargesTotal">0</p></div></div><div class="card"><h3 class="subheading mb-10">Quick Search + Water Statement PDF</h3><div class="inline-row"><input id="waterQuickSearch" class="flex-1" type="text" placeholder="MCID / house id / meter id"><button onclick="quickSearchWater()">Search</button><button onclick="printWaterStatementFromInput('waterQuickSearch')">Print Statement PDF</button></div><div id="waterQuickResult" class="mt-15"></div></div></div>
+
+                    <div id="waterRegister" class="water-section hidden"><h2 class="section-heading">Register New House Connection</h2><div class="card"><h3 class="subheading mb-10">MCID Verification</h3><div class="inline-row"><input id="waterVerifyMCID" class="flex-1" type="text" placeholder="MCID-0001"><button onclick="verifyMCIDForModule('water')">Verify MCID</button></div><div id="waterVerifyResult" class="mt-15"></div></div><div class="form-grid"><div class="form-group"><label>MCID</label><input id="waterMCID" type="text" placeholder="MCID-0001"></div><div class="form-group"><label>House ID</label><input id="waterHouseId" type="text" placeholder="HOUSE-01"></div><div class="form-group"><label>House Label</label><input id="waterHouseLabel" type="text"></div><div class="form-group"><label>Street/Region</label><input id="waterStreet" type="text"></div><div class="form-group"><label>Connection Type</label><select id="waterConnectionType"><option>Residential</option><option>Commercial</option><option>Government</option></select></div><div class="form-group"><label>Meter ID</label><input id="waterMeterId" type="text" placeholder="MTR-1001"></div></div><div class="form-group"><label>House Coordinates</label><div class="inline-row"><input id="waterX" class="flex-1" type="number" placeholder="X"><input id="waterY" class="flex-1" type="number" placeholder="Y"><input id="waterZ" class="flex-1" type="number" placeholder="Z"></div></div><div class="inline-row"><button onclick="registerWaterConnection()">Register Connection</button><button onclick="clearFormFields('waterRegister')">Clear Fields</button></div></div>
+
+                    <div id="waterUsage" class="water-section hidden"><h2 class="section-heading">Register Usage + Auto Charge</h2><div class="form-grid"><div class="form-group"><label>MCID</label><input id="waterUsageMCID" type="text" placeholder="MCID-0001"></div><div class="form-group"><label>House ID</label><input id="waterUsageHouseId" type="text" placeholder="HOUSE-01"></div><div class="form-group"><label>Water Blocks Used</label><input id="waterBlocksUsed" type="number" min="1"></div><div class="form-group"><label>Period</label><input id="waterUsagePeriod" type="text" placeholder="2026-02"></div></div><div class="inline-row"><button onclick="registerWaterUsage()">Charge 1 Gold Nugget / Block</button><button onclick="clearFormFields('waterUsage')">Clear Fields</button></div><div id="waterUsageResult" class="mt-15"></div></div>
+
+                    <div id="waterLogs" class="water-section hidden"><h2 class="section-heading">Water Logs</h2><table><thead><tr><th>Date</th><th>MCID</th><th>House</th><th>Blocks</th><th>Charge</th><th>Bank TX</th></tr></thead><tbody id="waterLogsBody"></tbody></table></div>
+                </div>
+                <div class="status-bar"><span>Water Utility Ready</span></div>
+            </div>
+
+            <div class="window" id="taxApp">
+                <div class="title-bar"><span class="title-text">Taxation, Services & Government Bills</span><div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div></div>
+                <div class="menu-bar"><div class="menu-item" onclick="showTaxSection('dashboard')">Dashboard</div><div class="menu-item" onclick="showTaxSection('manual')">Manual Tax</div><div class="menu-item" onclick="showTaxSection('auto')">Auto Tax</div><div class="menu-item" onclick="showTaxSection('bills')">Issue Bill</div><div class="menu-item" onclick="showTaxSection('logs')">Logs</div></div>
+                <div class="window-content">
+                    <div id="taxDashboard" class="tax-section"><h2 class="section-heading">Tax Overview</h2><div class="stats-grid"><div class="card"><h3 class="subheading">Total Taxes Collected</h3><p id="taxTotalCollected">0</p></div><div class="card"><h3 class="subheading">Taxed Citizens</h3><p id="taxedCitizenCount">0</p></div><div class="card"><h3 class="subheading">Last Run</h3><p id="taxLastRun">Never</p></div></div><div class="card"><h3 class="subheading mb-10">Quick Search + Tax Notice PDF</h3><div class="inline-row"><input id="taxQuickSearch" class="flex-1" type="text" placeholder="MCID / Name"><button onclick="quickSearchTax()">Search</button><button onclick="printTaxStatementFromInput('taxQuickSearch')">Print Tax Notice PDF</button></div><div id="taxQuickResult" class="mt-15"></div></div></div>
+
+                    <div id="taxManual" class="tax-section hidden"><h2 class="section-heading">Manual Tax Charge</h2><div class="form-grid"><div class="form-group"><label>MCID</label><input id="taxManualMCID" type="text" placeholder="MCID-0001"></div><div class="form-group"><label>Service Type</label><select id="taxManualService"><option>Med-Care</option><option>Repatriation</option><option>Security</option><option>Street</option><option>Utilities</option><option>Other</option></select></div><div class="form-group"><label>Amount (Gold Nuggets)</label><input id="taxManualAmount" type="number" min="1"></div><div class="form-group"><label>Notes</label><input id="taxManualNotes" type="text"></div></div><div class="inline-row"><button onclick="applyManualTax()">Apply Tax & Deduct from Bank</button><button onclick="clearFormFields('taxManual')">Clear Fields</button></div><div id="taxManualResult" class="mt-15"></div></div>
+
+                    <div id="taxAuto" class="tax-section hidden"><h2 class="section-heading">Automatic Tax Run</h2><div class="form-grid"><div class="form-group"><label>Med-Care Fee</label><input id="taxAutoMedcare" type="number" min="0" value="2"></div><div class="form-group"><label>Repatriation Fee</label><input id="taxAutoRepat" type="number" min="0" value="1"></div><div class="form-group"><label>Security Fee</label><input id="taxAutoSecurity" type="number" min="0" value="3"></div><div class="form-group"><label>Street Fee</label><input id="taxAutoStreet" type="number" min="0" value="1"></div><div class="form-group"><label>Other Service Fee</label><input id="taxAutoOther" type="number" min="0" value="0"></div></div><div class="inline-row"><button onclick="runAutomaticTax()">Run Automatic Tax for All Linked Citizens</button><button onclick="clearFormFields('taxAuto')">Clear Fields</button></div><div id="taxAutoResult" class="mt-15"></div></div>
+
+                    <div id="taxBills" class="tax-section hidden">
+                        <h2 class="section-heading">Issue Government Bill</h2>
+                        <div class="card"><h3 class="subheading mb-10">MCID Verification</h3><div class="inline-row"><input id="billVerifyMCID" class="flex-1" type="text" placeholder="MCID-0001"><button onclick="verifyMCIDForModule('bill')">Verify MCID</button></div><div id="billVerifyResult" class="mt-15"></div></div>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID</label><input id="billMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>Bill Department</label><input id="billDepartment" type="text" placeholder="Public Services"></div>
+                            <div class="form-group"><label>Bill Category</label><select id="billCategory"><option>Med-Care</option><option>Repatriation</option><option>Security</option><option>Street</option><option>Water</option><option>Infrastructure</option><option>Other</option></select></div>
+                            <div class="form-group"><label>Priority</label><select id="billPriority"><option>Normal</option><option>Urgent</option><option>Critical</option></select></div>
+                            <div class="form-group"><label>Reference Case ID</label><input id="billCaseId" type="text" placeholder="CASE-2026-001"></div>
+                            <div class="form-group"><label>Due Date</label><input id="billDueDate" type="date"></div>
+                            <div class="form-group"><label>Base Fee</label><input id="billBaseFee" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Labor Fee</label><input id="billLaborFee" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Materials Fee</label><input id="billMaterialFee" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Penalty Fee</label><input id="billPenaltyFee" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Discount</label><input id="billDiscount" type="number" min="0" value="0"></div>
+                            <div class="form-group"><label>Auto-Deduct From Bank</label><select id="billAutoDeduct"><option>No</option><option>Yes</option></select></div>
+                        </div>
+                        <div class="form-group"><label>Detailed Description</label><textarea id="billDescription" rows="3" placeholder="Describe services rendered and reason for this bill"></textarea></div>
+                        <div class="form-group"><label>Legal Notes / Clauses</label><textarea id="billLegalNotes" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="issueGovernmentBill()">Issue Government Bill</button><button onclick="clearFormFields('taxBills')">Clear Fields</button></div>
+                        <div id="billIssueResult" class="mt-15"></div>
+                        <table><thead><tr><th>Bill ID</th><th>MCID</th><th>Category</th><th>Total</th><th>Status</th><th>PDF</th></tr></thead><tbody id="billLogBody"></tbody></table>
+                    </div>
+
+                    <div id="taxLogs" class="tax-section hidden"><h2 class="section-heading">Tax Logs</h2><table><thead><tr><th>Date</th><th>MCID</th><th>Service</th><th>Amount</th><th>Status</th><th>TX</th></tr></thead><tbody id="taxLogsBody"></tbody></table></div>
+                </div>
+                <div class="status-bar"><span>Taxation Ready</span></div>
+            </div>
+
+            <div class="window" id="policeApp">
+                <div class="title-bar"><span class="title-text">Police & NSD Command</span><div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div></div>
+                <div class="menu-bar"><div class="menu-item" onclick="showPoliceSection('dashboard')">Dashboard</div><div class="menu-item" onclick="showPoliceSection('felony')">Felony</div><div class="menu-item" onclick="showPoliceSection('arrest')">Arrest</div><div class="menu-item" onclick="showPoliceSection('bolo')">BOLO</div><div class="menu-item" onclick="showPoliceSection('ban')">Entry Bans</div><div class="menu-item" onclick="showPoliceSection('search')">Search</div></div>
+                <div class="window-content">
+                    <div id="policeDashboard" class="police-section">
+                        <h2 class="section-heading">National Security Overview</h2>
+                        <div class="stats-grid">
+                            <div class="card"><h3 class="subheading">Felonies</h3><p id="policeFelonyCount">0</p></div>
+                            <div class="card"><h3 class="subheading">Arrests</h3><p id="policeArrestCount">0</p></div>
+                            <div class="card"><h3 class="subheading">Active BOLO/Bans</h3><p id="policeActiveFlagCount">0</p></div>
+                        </div>
+                        <div class="card"><h3 class="subheading mb-10">Quick Search + NSD Notice PDF</h3><div class="inline-row"><input id="policeQuickSearch" class="flex-1" type="text" placeholder="MCID / case id / name"><button onclick="quickSearchPolice()">Search</button><button onclick="printPoliceNoticeFromInput('policeQuickSearch')">Print NSD PDF</button></div><div id="policeQuickResult" class="mt-15"></div></div>
+                    </div>
+
+                    <div id="policeFelony" class="police-section hidden">
+                        <h2 class="section-heading">Register Felony</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID</label><input id="policeFelonyMCID" type="text" placeholder="MCID-0001"></div>
+                            <div class="form-group"><label>Case ID</label><input id="policeFelonyCaseId" type="text" placeholder="NSD-CASE-001"></div>
+                            <div class="form-group"><label>Offense Category</label><select id="policeFelonyCategory"><option>Theft</option><option>Assault</option><option>Fraud</option><option>Property Damage</option><option>Terror Activity</option><option>Other</option></select></div>
+                            <div class="form-group"><label>Severity</label><select id="policeFelonySeverity"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+                            <div class="form-group"><label>Location/Sector</label><input id="policeFelonyLocation" type="text"></div>
+                            <div class="form-group"><label>Date</label><input id="policeFelonyDate" type="date"></div>
+                            <div class="form-group"><label>Lead Officer</label><input id="policeFelonyOfficer" type="text"></div>
+                            <div class="form-group"><label>Status</label><select id="policeFelonyStatus"><option>Open</option><option>Under Investigation</option><option>Closed</option></select></div>
+                        </div>
+                        <div class="form-group"><label>Description</label><textarea id="policeFelonyDesc" rows="2"></textarea></div>
+                        <div class="form-group"><label>Evidence Summary</label><textarea id="policeFelonyEvidence" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="registerFelony()">Register Felony</button><button onclick="clearFormFields('policeFelony')">Clear Fields</button></div>
+                        <div id="policeFelonyResult" class="mt-15"></div>
+                    </div>
+
+                    <div id="policeArrest" class="police-section hidden">
+                        <h2 class="section-heading">Register Arrest</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID</label><input id="policeArrestMCID" type="text"></div>
+                            <div class="form-group"><label>Related Case ID</label><input id="policeArrestCaseId" type="text"></div>
+                            <div class="form-group"><label>Arrest ID</label><input id="policeArrestId" type="text" placeholder="ARR-001"></div>
+                            <div class="form-group"><label>Arrest Date</label><input id="policeArrestDate" type="date"></div>
+                            <div class="form-group"><label>Arrest Location</label><input id="policeArrestLocation" type="text"></div>
+                            <div class="form-group"><label>Arresting Officer</label><input id="policeArrestOfficer" type="text"></div>
+                            <div class="form-group"><label>Detention Facility</label><input id="policeArrestFacility" type="text"></div>
+                            <div class="form-group"><label>Bail Amount</label><input id="policeArrestBail" type="number" min="0"></div>
+                        </div>
+                        <div class="form-group"><label>Charges</label><textarea id="policeArrestCharges" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="registerArrest()">Register Arrest</button><button onclick="clearFormFields('policeArrest')">Clear Fields</button></div>
+                        <div id="policeArrestResult" class="mt-15"></div>
+                    </div>
+
+                    <div id="policeBolo" class="police-section hidden">
+                        <h2 class="section-heading">Issue BOLO</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID / Suspect ID</label><input id="policeBoloMCID" type="text"></div>
+                            <div class="form-group"><label>BOLO ID</label><input id="policeBoloId" type="text" placeholder="BOLO-001"></div>
+                            <div class="form-group"><label>Threat Level</label><select id="policeBoloThreat"><option>Low</option><option>Medium</option><option>High</option><option>Critical</option></select></div>
+                            <div class="form-group"><label>Last Seen Location</label><input id="policeBoloLocation" type="text"></div>
+                            <div class="form-group"><label>Issued Date</label><input id="policeBoloDate" type="date"></div>
+                            <div class="form-group"><label>Issued By</label><input id="policeBoloOfficer" type="text"></div>
+                        </div>
+                        <div class="form-group"><label>Description / Warning</label><textarea id="policeBoloDesc" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="registerBolo()">Issue BOLO</button><button onclick="clearFormFields('policeBolo')">Clear Fields</button></div>
+                        <div id="policeBoloResult" class="mt-15"></div>
+                    </div>
+
+                    <div id="policeBan" class="police-section hidden">
+                        <h2 class="section-heading">Ban Entry to Country</h2>
+                        <div class="form-grid">
+                            <div class="form-group"><label>MCID / Subject</label><input id="policeBanMCID" type="text"></div>
+                            <div class="form-group"><label>Ban ID</label><input id="policeBanId" type="text" placeholder="BAN-001"></div>
+                            <div class="form-group"><label>Ban Type</label><select id="policeBanType"><option>Temporary</option><option>Permanent</option><option>Conditional</option></select></div>
+                            <div class="form-group"><label>Start Date</label><input id="policeBanStart" type="date"></div>
+                            <div class="form-group"><label>End Date (if temporary)</label><input id="policeBanEnd" type="date"></div>
+                            <div class="form-group"><label>Issued By</label><input id="policeBanOfficer" type="text"></div>
+                        </div>
+                        <div class="form-group"><label>Reason</label><textarea id="policeBanReason" rows="2"></textarea></div>
+                        <div class="inline-row"><button onclick="registerEntryBan()">Register Entry Ban</button><button onclick="clearFormFields('policeBan')">Clear Fields</button></div>
+                        <div id="policeBanResult" class="mt-15"></div>
+                    </div>
+
+                    <div id="policeSearch" class="police-section hidden">
+                        <h2 class="section-heading">Police Search</h2>
+                        <div class="inline-row"><input id="policeSearchInput" class="flex-1" type="text" placeholder="MCID / case / arrest / bolo / ban"><button onclick="searchPoliceRecords()">Search</button></div>
+                        <div id="policeSearchResult" class="mt-15"></div>
+                        <table><thead><tr><th>Type</th><th>ID</th><th>MCID</th><th>Status</th><th>Date</th><th>Profile</th></tr></thead><tbody id="policeLogBody"></tbody></table>
+                    </div>
+                </div>
+                <div class="status-bar"><span>Police & NSD Ready</span></div>
+            </div>
+
+            <div class="window" id="browseApp">
+                <div class="title-bar"><span class="title-text">Global Browser - Advanced Search & Update</span><div class="window-buttons"><div class="btn-window" data-window-action="min">_</div><div class="btn-window" data-window-action="max">□</div><div class="btn-window" data-window-action="close">✕</div></div></div>
+                <div class="menu-bar"><div class="menu-item" onclick="showBrowseSection('dashboard')">Dashboard</div><div class="menu-item" onclick="showBrowseSection('search')">Advanced Search</div><div class="menu-item" onclick="showBrowseSection('update')">Update Profile</div></div>
+                <div class="window-content">
+                    <div id="browseDashboard" class="browse-section"><h2 class="section-heading">Global Browser Mission</h2><div class="card"><p>Use this app only for advanced profile filtering, viewing, and updates.</p><p>Search results open popup profiles directly.</p></div></div>
+                    <div id="browseSearch" class="browse-section hidden"><h2 class="section-heading">Advanced Search Filters</h2><div class="form-grid"><div class="form-group"><label>MCID</label><input id="browseFilterMCID" type="text"></div><div class="form-group"><label>Name Contains</label><input id="browseFilterName" type="text"></div><div class="form-group"><label>Occupation</label><input id="browseFilterOccupation" type="text"></div><div class="form-group"><label>Nationality</label><input id="browseFilterNationality" type="text"></div><div class="form-group"><label>Has Account</label><select id="browseFilterHasAccount"><option value="">Any</option><option value="yes">Yes</option><option value="no">No</option></select></div><div class="form-group"><label>Min Accounts</label><input id="browseFilterMinAccounts" type="number" min="0"></div><div class="form-group"><label>Permit Contains</label><input id="browseFilterPermit" type="text"></div><div class="form-group"><label>Tax ID</label><input id="browseFilterTaxId" type="text"></div></div><button onclick="advancedSearchProfiles()">Run Advanced Search</button><table><thead><tr><th>MCID</th><th>Name</th><th>Occupation</th><th>Nationality</th><th>Accounts</th><th>Open</th><th>Edit</th></tr></thead><tbody id="browseSearchBody"></tbody></table></div>
+                    <div id="browseUpdate" class="browse-section hidden"><h2 class="section-heading">Update User Profile</h2><div class="form-grid"><div class="form-group"><label>MCID</label><input id="browseUpdateMCID" type="text" placeholder="MCID-0001"></div><div class="form-group"><label>First Name</label><input id="browseUpdateFirstName" type="text"></div><div class="form-group"><label>Middle Name</label><input id="browseUpdateMiddleName" type="text"></div><div class="form-group"><label>Last Name</label><input id="browseUpdateLastName" type="text"></div><div class="form-group"><label>Username</label><input id="browseUpdateUsername" type="text"></div><div class="form-group"><label>DOB</label><input id="browseUpdateDOB" type="date"></div><div class="form-group"><label>Age</label><input id="browseUpdateAge" type="number" min="0"></div><div class="form-group"><label>Gender</label><input id="browseUpdateGender" type="text"></div><div class="form-group"><label>Nationality</label><input id="browseUpdateNationality" type="text"></div><div class="form-group"><label>Marital Status</label><input id="browseUpdateMaritalStatus" type="text"></div><div class="form-group"><label>Occupation</label><input id="browseUpdateOccupation" type="text"></div><div class="form-group"><label>Employer</label><input id="browseUpdateEmployer" type="text"></div><div class="form-group"><label>Education Level</label><input id="browseUpdateEducationLevel" type="text"></div><div class="form-group"><label>Blood Type</label><input id="browseUpdateBloodType" type="text"></div><div class="form-group"><label>Allergies</label><input id="browseUpdateAllergies" type="text"></div><div class="form-group"><label>Criminal Record Notes</label><input id="browseUpdateCriminalRecord" type="text"></div><div class="form-group"><label>Emergency Name</label><input id="browseUpdateEmergencyName" type="text"></div><div class="form-group"><label>Emergency Relation</label><input id="browseUpdateEmergencyRelation" type="text"></div><div class="form-group"><label>Emergency Contact</label><input id="browseUpdateEmergencyContact" type="text"></div><div class="form-group"><label>Mailing Address</label><input id="browseUpdateAddress" type="text"></div><div class="form-group"><label>Residence X</label><input id="browseUpdateResidenceX" type="number"></div><div class="form-group"><label>Residence Y</label><input id="browseUpdateResidenceY" type="number"></div><div class="form-group"><label>Residence Z</label><input id="browseUpdateResidenceZ" type="number"></div><div class="form-group"><label>Permits</label><input id="browseUpdatePermits" type="text"></div><div class="form-group"><label>Tax ID</label><input id="browseUpdateTaxId" type="text"></div><div class="form-group"><label>Skills</label><input id="browseUpdateSkills" type="text"></div><div class="form-group"><label>Notes</label><input id="browseUpdateNotes" type="text"></div></div><div class="inline-row"><button onclick="loadProfileForUpdate()">Load Current</button><button onclick="applyProfileUpdate()">Apply Update</button><button onclick="clearFormFields('browseUpdate')">Clear Fields</button></div><div id="browseUpdateResult" class="mt-15"></div></div>
+                </div>
+                <div class="status-bar"><span>Advanced Search Ready</span></div>
+            </div>
+        </div>
+
+        <div class="taskbar">
+            <span class="start-button">Start</span>
+            <div class="taskbar-button active" data-app-id="welcomeWindow" onclick="switchApp('welcomeWindow')">🏠</div>
+            <div class="taskbar-button" data-app-id="borderApp" onclick="switchApp('borderApp')">🛂</div>
+            <div class="taskbar-button" data-app-id="citizenApp" onclick="switchApp('citizenApp')">👤</div>
+            <div class="taskbar-button" data-app-id="bankingApp" onclick="switchApp('bankingApp')">💰</div>
+            <div class="taskbar-button" data-app-id="waterApp" onclick="switchApp('waterApp')">💧</div>
+            <div class="taskbar-button" data-app-id="taxApp" onclick="switchApp('taxApp')">🏛️</div>
+            <div class="taskbar-button" data-app-id="policeApp" onclick="switchApp('policeApp')">🛡️</div>
+            <div class="taskbar-button" data-app-id="browseApp" onclick="switchApp('browseApp')">🔎</div>
+            <button id="notificationButton" class="notification-button" onclick="toggleNotificationCenter()">🔔<span id="notificationBadge" class="notification-badge hidden">0</span></button>
+            <div class="flex-1"></div>
+            <span id="taskbarClock" class="taskbar-clock">🕐 00:00</span>
+        </div>
+    </div>
+
+    <div id="profilePopup" class="profile-popup hidden">
+        <div class="profile-popup-inner window">
+            <div class="title-bar"><span class="title-text">Player Profile View</span><div class="window-buttons"><div class="btn-window" onclick="closeProfilePopup()">✕</div></div></div>
+            <div class="window-content"><div id="profilePopupContent"></div></div>
+        </div>
+    </div>
+
+    <div id="systemAlert" class="system-alert hidden">
+        <div class="system-alert-inner window">
+            <div class="title-bar"><span class="title-text" id="systemAlertTitle">System Alert</span><div class="window-buttons"><div class="btn-window" onclick="closeSystemAlert()">✕</div></div></div>
+            <div class="window-content">
+                <p id="systemAlertMessage"></p>
+                <div class="inline-row mt-15"><button onclick="closeSystemAlert()">Acknowledge</button></div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notificationCenter" class="notification-center hidden">
+        <div class="notification-center-header">
+            <strong>Notifications</strong>
+            <div class="inline-row">
+                <button onclick="clearAllNotifications()">Delete All</button>
+                <button onclick="toggleNotificationCenter()">Close</button>
+            </div>
+        </div>
+        <div id="notificationList" class="notification-list"></div>
+    </div>
+
+    <div id="loadingScene" class="loading-scene hidden" aria-live="polite">
+        <div class="loading-box">
+            <h3 class="subheading mb-10">Minecraft Government OS</h3>
+            <p id="loadingSceneText">Loading module...</p>
+            <div class="loading-spinner-circle" aria-hidden="true"></div>
+            <div class="loading-bar-track"><div id="loadingBarFill" class="loading-bar-fill"></div></div>
+            <p class="loading-meta">Windows XP compatible shell initializing...</p>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
