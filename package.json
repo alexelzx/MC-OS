@@ -1,0 +1,43 @@
+{
+  "name": "mc-os",
+  "version": "1.0.1",
+  "description": "A simple, retro-style app for Minecraft Server Government RP and Citizen Management",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "build:win": "electron-builder --win"
+  },
+  "build": {
+    "appId": "com.minecraftos.desktop",
+    "files": [
+      "main.js",
+      "app.js",
+      "MC-OS.html",
+      "styles.css",
+      "icon.ico",
+      "license.txt",
+      "package.json",
+      "node_modules/**/*"
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "installerIcon": "icon.ico",
+      "uninstallerIcon": "icon.ico",
+      "createDesktopShortcut": true,
+      "license": "license.txt"
+    }
+  },
+  "keywords": [],
+  "author": "Alexios ELIZALDE XIROKOSTA",
+  "license": "AGPL-3.0",
+  "devDependencies": {
+    "electron": "^40.6.1",
+    "electron-builder": "^26.8.1"
+  }
+}
